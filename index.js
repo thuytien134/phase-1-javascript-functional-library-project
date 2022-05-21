@@ -1,61 +1,65 @@
-function myEach(collection, callback) {
+function returnArray(collection){
     if (Array.isArray(collection) === true) {
-        collection.forEach(callback)
+        return collection
+    } else { 
+        return Object.values(collection)
     }
-    else {
-        let newArr = Object.values(collection)
-        newArr.forEach(callback)
-    }
-    return collection
 }
+
+function myEach(collection, callback) {
+   for (let i = 0; i < returnArray(collection).length; i++) {
+       callback(returnArray(collection)[i])
+   }
+   return collection
+}
+
 
 function myMap(collection, callback) {
-    if (Array.isArray(collection) === true) {
-        return collection.map(callback)
+    let newArr =[]
+    for (let i = 0; i < returnArray(collection).length; i++) {
+      newArr.push(callback(returnArray(collection)[i]))    
     }
-    else {
-        let newArr = Object.values(collection)
-        return newArr.map(callback)
-    }
+    return newArr
 }
 
-function myReduce(collection, callback, acc = 0) {
-    if (Array.isArray(collection) === true) {
-        return collection.reduce(callback, acc)
+
+function myReduce(collection, callback, acc) {
+    let newArr = returnArray(collection)
+    if (acc === undefined) {
+        acc = newArr[0]
+        for (let i = 1; i < newArr.length; i++) {
+            acc = callback(acc,newArr[i],collection)  
+        }
+    } else {
+        for (let i = 0; i < newArr.length; i++) {
+           acc = callback(acc,newArr[i],collection)          
+        }
     }
-    else {
-        let newArr = Object.values(collection);
-        return newArr.reduce(callback, acc)
-    }
+    return acc
 }
+
 
 function myFind(collection, predicate) {
-    if (Array.isArray(collection) === true) {
-        return collection.find(predicate)
-    }
-    else {
-        let newArr = Object.values(collection);
-        return newArr.find(predicate)
-    }
+   for (let i = 0; i < returnArray(collection).length; i++) {
+      if (predicate(returnArray(collection)[i]) === true) {
+   return returnArray(collection)[i]
+      }
+ }
 }
+
+
 function myFilter(collection, predicate) {
-    if (Array.isArray(collection) === true) {
-        return collection.filter(predicate)
-    }
-    else {
-        let newArr = Object.values(collection);
-        return newArr.filter(predicate)
-    }
+   let newArr = []
+   for (let i = 0; i < returnArray(collection).length; i++) {
+      if (predicate(returnArray(collection)[i])=== true) {
+          newArr.push(returnArray(collection)[i])
+      }
+   }
+   return newArr
 }
 
 function mySize(collection) {
-    if (Array.isArray(collection) === true) {
-        return collection.length
-    }
-    else {
-        let newArr = Object.values(collection);
-        return newArr.length
-    }
+   return returnArray(collection).length
 }
 
 function myFirst(array, n = 0) {
